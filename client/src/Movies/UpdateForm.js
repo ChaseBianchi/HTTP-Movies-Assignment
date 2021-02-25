@@ -7,8 +7,9 @@ const initalState = {title: '', director: '', metascore: '', stars: []}
 function UpdateForm(props) {
     const [form, setForm] = useState(initalState)
 
-    const {id} = useParams()
+    const id = parseInt(useParams().id)
     const {push} = useHistory()
+    console.log('id ',id)
 
     const changeHandler = (e) => {
         setForm({...form,[e.target.name]: e.target.value})
@@ -17,11 +18,20 @@ function UpdateForm(props) {
     const submitHandler = (e) => {
       e.preventDefault()
       const newForm = {...form, id}
-      console.log(form)
+      const newMovieList = []
+      console.log('new form ',newForm)
       axios.put(`http://localhost:5000/api/movies/${id}`, newForm)
         .then((res) => {
-            console.log(res);
-        //   props.setMovieList()
+            console.log('res ',res)
+          const newMovieList = props.movieList
+            .map(item => {
+                if(item.id !== res.data.id){return item}
+            })
+          newMovieList.push(res.data);
+          console.log('new movie list complete: ',newMovieList)
+          props.setMovieList(newMovieList)
+          console.log('updated movielist state ',props.movieList)
+          push(`/movies/${id}`)
         }).catch((err) => {
           console.log(err);
         })
