@@ -1,4 +1,4 @@
-import React, {useState} from 'react'
+import React, {useState, useEffect} from 'react'
 import axios from 'axios'
 import { useParams, useHistory } from "react-router-dom";
 
@@ -9,7 +9,11 @@ function UpdateForm(props) {
 
     const id = parseInt(useParams().id)
     const {push} = useHistory()
-    console.log('id ',id)
+    // console.log('id ',id)
+    // console.log('movie list props ',props.movieList[id])
+    // useEffect(() => {
+    //   setForm(props.movieList[id])
+    // },[])
 
     const changeHandler = (e) => {
         setForm({...form,[e.target.name]: e.target.value})
@@ -17,8 +21,7 @@ function UpdateForm(props) {
     
     const submitHandler = (e) => {
       e.preventDefault()
-      const newForm = {...form, id}
-      const newMovieList = []
+      const newForm = {...form, id: id}
       console.log('new form ',newForm)
       axios.put(`http://localhost:5000/api/movies/${id}`, newForm)
         .then((res) => {
